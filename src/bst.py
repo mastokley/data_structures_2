@@ -25,9 +25,9 @@ class BST(object):
             if new_parent is not None:
                 self._size += 1
                 if new_parent.val > new_node.val:
-                    new_parent.lchild = new_node
+                    new_parent.l_child = new_node
                 else:
-                    new_parent.rchild = new_node
+                    new_parent.r_child = new_node
 
     def contains(self, val):
         if not self.head:
@@ -49,18 +49,18 @@ class BST(object):
             start = self.head
         while True:
             # if moving down, keep moving down and left
-            if (current_node.lchild is not None and
+            if (current_node.l_child is not None and
                 last_node == current_node.parent):
                 current_depth += 1
                 last_node = current_node
-                current_node = current_node.lchild
+                current_node = current_node.l_child
 
             # if you can't move left, move down right
-            elif (current_node.rchild is not None and
-                  last_node != current_node.rchild):
+            elif (current_node.r_child is not None and
+                  last_node != current_node.r_child):
                 current_depth += 1
                 last_node = current_node
-                current_node = current_node.rchild
+                current_node = current_node.r_child
 
             elif (current_node.parent is not None and
                   current_node != start):
@@ -72,15 +72,15 @@ class BST(object):
                 max_depth = current_depth
 
 #            if (current_node == start and
-#                (last_node == self.head.rchild or
-#             (self.head.rchild is None and )))
+#                (last_node == self.head.r_child or
+#             (self.head.r_child is None and )))
 
 # TODO: rewrite using new start cursor
             if ((current_node == self.head and
-                 last_node == self.head.rchild) or
+                 last_node == self.head.r_child) or
                 (current_node == self.head and
-                 self.head.rchild is None and
-                 last_node == self.head.lchild)):
+                 self.head.r_child is None and
+                 last_node == self.head.l_child)):
                 break
 
         return max_depth
@@ -92,15 +92,15 @@ class BST(object):
         """Helper function for insert."""
         while True:
             if new_node.val > old_node.val:
-                if not old_node.rchild:
+                if not old_node.r_child:
                     return old_node
                 else:
-                    old_node = old_node.rchild
+                    old_node = old_node.r_child
             elif new_node.val < old_node.val:
-                if not old_node.lchild:
+                if not old_node.l_child:
                     return old_node
                 else:
-                    old_node = old_node.lchild
+                    old_node = old_node.l_child
             else:
                 print("Value already in BST.")
                 return None
@@ -109,27 +109,27 @@ class BST(object):
 class BSTNode(object):
     """Create a BST Node class."""
 
-    def __init__(self, val, parent=None, lchild=None, rchild=None):
+    def __init__(self, val, parent=None, l_child=None, r_child=None):
         """Instantiate a new node object."""
         self.val = val
         self.parent = parent
-        self._lchild = lchild
-        self._rchild = rchild
+        self._l_child = l_child
+        self._r_child = r_child
 
     @property
-    def lchild(self):
-        return self._lchild
+    def l_child(self):
+        return self._l_child
 
-    @lchild.setter
-    def lchild(self, node):
-        self._lchild = node
+    @l_child.setter
+    def l_child(self, node):
+        self._l_child = node
         node.parent = self
 
     @property
-    def rchild(self):
-        return self._rchild
+    def r_child(self):
+        return self._r_child
 
-    @rchild.setter
-    def rchild(self, node):
-        self._rchild = node
+    @r_child.setter
+    def r_child(self, node):
+        self._r_child = node
         node.parent = self
