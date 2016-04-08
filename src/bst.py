@@ -113,7 +113,7 @@ class BST(object):
         """Traverse tree 'in order': left, self, right."""
         def gen_in(node):
             if node is None:
-                return None
+                return
             try:
                 for item in gen_in(node.l_child):
                     yield item
@@ -131,7 +131,7 @@ class BST(object):
         """Traverse tree in 'pre-order': self, left, right."""
         def gen_pre(node):
             if node is None:
-                return None
+                return
             yield node.val
             try:
                 for item in gen_pre(node.l_child):
@@ -149,7 +149,7 @@ class BST(object):
         """Traverse tree in 'post-order': left, right, self."""
         def gen_post(node):
             if node is None:
-                return None
+                return
             try:
                 for item in gen_post(node.l_child):
                     yield item
