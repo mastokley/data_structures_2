@@ -5,11 +5,8 @@ DIVERSE_TREES = [
     [2, 4, 6, 8, ],
     [17, 1, 23, 100, 5, ],
     [0, 0, 34, 0, 33, ],
-    [22 , 2, 6, -7, 31, 5, 18, 
-    14, 108, -54, 24.5, 
-    29, -23, 16],
+    [22, 2, 6, -7, 31, 5, 18, 14, 108, -54, 24.5, 29, -23, 16],
 ]
-
 
 @pytest.fixture
 def empty_tree():
@@ -18,18 +15,11 @@ def empty_tree():
     return empty_tree
 
 
-# @pytest.fixture
-# def loaded_tree():
-#     from bst import BST
-#     loaded_tree = BST()
-#     for item in DIVERSE_TREES[num]:
-#         loaded_tree.insert(item)
-#     return loaded_tree
-
 def _load_tree(tree, num):
     for item in DIVERSE_TREES[num]:
         tree.insert(item)
     return tree
+
 
 def test_insert(empty_tree):
     empty_tree.insert(10)
@@ -114,9 +104,9 @@ def test_depth_no_right(empty_tree):
         empty_tree.insert(val)
     assert empty_tree.depth() == 7
 
+
 def test_balance_0(empty_tree):
     tree = _load_tree(empty_tree, 0)
-    import pdb; pdb.set_trace()
     assert tree.balance() == -3
 
 
@@ -134,3 +124,71 @@ def test_balance_head(empty_tree):
     tree = empty_tree
     tree.insert(5)
     assert tree.balance() == 0
+
+
+def test_traversal_in(empty_tree):
+    tree = _load_tree(empty_tree, 2)
+    return_val = [x for x in tree.traverse_in()]
+    assert return_val == [1, 5, 17, 23, 100]
+
+
+def test_traversal_pre(empty_tree):
+    tree = _load_tree(empty_tree, 2)
+    return_val = [x for x in tree.traverse_pre()]
+    assert return_val == [17, 1, 5, 23, 100]
+
+
+def test_traversal_post(empty_tree):
+    tree = _load_tree(empty_tree, 2)
+    return_val = [x for x in tree.traverse_post()]
+    assert return_val == [5, 1, 100, 23, 17]
+
+
+def test_traversal_breadth(empty_tree):
+    tree = _load_tree(empty_tree, 2)
+    return_val = [x for x in tree.traverse_breadth()]
+    assert return_val == [17, 1, 23, 5, 100]
+
+
+def test_traversal_in_edge_zero(empty_tree):
+    result = [x for x in empty_tree.traverse_in()]
+    assert result == []
+
+
+def test_traversal_pre_edge_zero(empty_tree):
+    result = [x for x in empty_tree.traverse_pre()]
+    assert result == []
+
+
+def test_traversal_post_edge_zero(empty_tree):
+    result = [x for x in empty_tree.traverse_post()]
+    assert result == []
+
+
+def test_traversal_breadth_edge_zero(empty_tree):
+    result = [x for x in empty_tree.traverse_breadth()]
+    assert result == []
+
+
+def test_traversal_in_edge_one(empty_tree):
+    empty_tree.insert(1000)
+    result = [x for x in empty_tree.traverse_in()]
+    assert result == [1000]
+
+
+def test_traversal_pre_edge_one(empty_tree):
+    empty_tree.insert(1000)
+    result = [x for x in empty_tree.traverse_pre()]
+    assert result == [1000]
+
+
+def test_traversal_post_edge_one(empty_tree):
+    empty_tree.insert(1000)
+    result = [x for x in empty_tree.traverse_post()]
+    assert result == [1000]
+
+
+def test_traversal_breadth_edge_one(empty_tree):
+    empty_tree.insert(1000)
+    result = [x for x in empty_tree.traverse_breadth()]
+    assert result == [1000]
