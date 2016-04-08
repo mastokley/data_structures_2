@@ -1,3 +1,4 @@
+from collections import deque
 
 
 class BST(object):
@@ -6,7 +7,6 @@ class BST(object):
     def __init__(self, node=None):
         """Instantiate a new binary sorted tree object."""
         self.head = node
-        # self.head.parent = None
         self._size = 0 if self.head is None else self._size == 1
 
     def insert(self, val):
@@ -82,7 +82,7 @@ class BST(object):
         return max_depth
 
     def balance(self):
-        if self.depth() > 1:        
+        if self.depth() > 1:
             return self.depth(self.head.l_child) - self.depth(self.head.r_child)
         else:
             return 0
@@ -103,6 +103,75 @@ class BST(object):
             else:
                 print("Value already in BST.")
                 return None
+
+    def traverse_in(self):
+        def gen_in(node):
+            if node is None:
+                return None
+            try:
+                for item in gen_in(node.l_child):
+                    yield item
+            except AttributeError:
+                pass
+            yield node.val
+            try:
+                for item in gen_in(node.r_child):
+                    yield item
+            except AttributeError:
+                pass
+        return gen_in(self.head)
+
+    def traverse_pre(self):
+        def gen_pre(node):
+            if node is None:
+                return None
+            yield node.val
+            try:
+                for item in gen_pre(node.l_child):
+                    yield item
+            except AttributeError:
+                pass
+            try:
+                for item in gen_pre(node.r_child):
+                    yield item
+            except AttributeError:
+                pass
+        return gen_pre(self.head)
+
+    def traverse_post(self):
+        def gen_post(node):
+            if node is None:
+                return None
+            try:
+                for item in gen_post(node.l_child):
+                    yield item
+            except AttributeError:
+                pass
+            try:
+                for item in gen_post(node.r_child):
+                    yield item
+            except AttributeError:
+                pass
+            yield node.val
+        return gen_post(self.head)
+
+    def traverse_breadth(self):
+        q = deque()
+        q.append(self.head)
+        while q:
+            catch = q.popleft()
+            try:
+                yield catch.val
+            except AttributeError:
+                pass
+            try:
+                q.append(catch.l_child)
+            except AttributeError:
+                pass
+            try:
+                q.append(catch.r_child)
+            except AttributeError:
+                pass
 
 
 class BSTNode(object):
