@@ -6,7 +6,7 @@ class BST(object):
     def __init__(self, node=None):
         """Instantiate a new binary sorted tree object."""
         self.head = node
-        self.head.parent = None
+        # self.head.parent = None
         self._size = 0 if self.head is None else self._size == 1
 
     def insert(self, val):
@@ -39,14 +39,14 @@ class BST(object):
         return self._size
 
     def depth(self, start=None):
+        starting_node = self.head if start is None else start
         if self.head is None:
             return 0
         last_node = None
-        current_node = self.head
         current_depth = 1
+        starting_node.parent = None
+        current_node = starting_node
         max_depth = 1
-        if start is None:
-            start = self.head
         while True:
             # if moving down, keep moving down and left
             if (current_node.l_child is not None and
@@ -62,6 +62,7 @@ class BST(object):
                 last_node = current_node
                 current_node = current_node.r_child
 
+            # if you can't move left or right, move up
             elif (current_node.parent is not None and
                   current_node != start):
                 current_depth -= 1

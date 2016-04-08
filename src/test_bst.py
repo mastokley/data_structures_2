@@ -32,15 +32,15 @@ def test_insert(empty_tree):
 def test_insert_multiple(empty_tree):
     empty_tree.insert(10)
     empty_tree.insert(10)
-    assert empty_tree.head.rchild is None
-    assert empty_tree.head.lchild is None
+    assert empty_tree.head.r_child is None
+    assert empty_tree.head.l_child is None
 
 
 def test_insert_multiple_diverse(empty_tree):
     empty_tree.insert(10)
     empty_tree.insert(20)
-    assert empty_tree.head.rchild is not None
-    assert empty_tree.head.lchild is None
+    assert empty_tree.head.r_child is not None
+    assert empty_tree.head.l_child is None
 
 
 def test_contains_empty(empty_tree):
