@@ -10,7 +10,7 @@ class BST(object):
         self._size = 0 if self.head is None else self._size == 1
 
     def insert(self, val):
-        """Inserts a node into binary search tree."""
+        """Insert a node into binary search tree."""
         try:
             float(val)
         except ValueError:
@@ -30,15 +30,18 @@ class BST(object):
                     new_parent.r_child = new_node
 
     def contains(self, val):
+        """Return true if value in tree."""
         if not self.head:
             return False
         dummy = BSTNode(val)
         return not self._find_parent(dummy, self.head)
 
     def size(self):
+        """Return count of all nodes in tree."""
         return self._size
 
     def depth(self, start='potato'):
+        """Return number of levels in tree."""
         starting_node = self.head if start == 'potato' else start
         if starting_node is None:
             return 0
@@ -72,6 +75,7 @@ class BST(object):
             if current_depth > max_depth:
                 max_depth = current_depth
 
+            # if done, exit
             if ((current_node == starting_node and
                  last_node == starting_node.r_child) or
                 (current_node == starting_node and
@@ -82,6 +86,7 @@ class BST(object):
         return max_depth
 
     def balance(self):
+        """Return depth of subtree on left less depth of subtree on right."""
         if self.depth() > 1:
             return self.depth(self.head.l_child) - self.depth(self.head.r_child)
         else:
@@ -105,6 +110,7 @@ class BST(object):
                 return None
 
     def traverse_in(self):
+        """Traverse tree 'in order': left, self, right."""
         def gen_in(node):
             if node is None:
                 return None
@@ -122,6 +128,7 @@ class BST(object):
         return gen_in(self.head)
 
     def traverse_pre(self):
+        """Traverse tree in 'pre-order': self, left, right."""
         def gen_pre(node):
             if node is None:
                 return None
@@ -139,6 +146,7 @@ class BST(object):
         return gen_pre(self.head)
 
     def traverse_post(self):
+        """Traverse tree in 'post-order': left, right, self."""
         def gen_post(node):
             if node is None:
                 return None
@@ -156,6 +164,7 @@ class BST(object):
         return gen_post(self.head)
 
     def traverse_breadth(self):
+        """Traverse tree from left to right, by level."""
         q = deque()
         q.append(self.head)
         while q:
