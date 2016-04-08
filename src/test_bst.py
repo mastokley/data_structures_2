@@ -5,6 +5,9 @@ DIVERSE_TREES = [
     [2, 4, 6, 8, ],
     [17, 1, 23, 100, 5, ],
     [0, 0, 34, 0, 33, ],
+    [22 , 2, 6, -7, 31, 5, 18, 
+    14, 108, -54, 24.5, 
+    29, -23, 16],
 ]
 
 
@@ -15,14 +18,18 @@ def empty_tree():
     return empty_tree
 
 
-@pytest.fixture
-def loaded_tree(num):
-    from bst import BST
-    loaded_tree = BST()
-    for item in DIVERSE_TREES[num]:
-        loaded_tree.insert(item)
-    return loaded_tree
+# @pytest.fixture
+# def loaded_tree():
+#     from bst import BST
+#     loaded_tree = BST()
+#     for item in DIVERSE_TREES[num]:
+#         loaded_tree.insert(item)
+#     return loaded_tree
 
+def _load_tree(tree, num):
+    for item in DIVERSE_TREES[num]:
+        tree.insert(item)
+    return tree
 
 def test_insert(empty_tree):
     empty_tree.insert(10)
@@ -47,14 +54,14 @@ def test_contains_empty(empty_tree):
     assert not empty_tree.contains(5)
 
 
-def test_contains_positive():
-    tree = loaded_tree(0)
+def test_contains_positive(empty_tree):
+    tree = _load_tree(empty_tree, 0)
     result = tree.contains(5)
     assert result
 
 
-def test_contains_positive_2():
-    tree = loaded_tree(3)
+def test_contains_positive_2(empty_tree):
+    tree = _load_tree(empty_tree, 3)
     result = tree.contains(5)
     assert not result
 
@@ -107,6 +114,23 @@ def test_depth_no_right(empty_tree):
         empty_tree.insert(val)
     assert empty_tree.depth() == 7
 
+def test_balance_0(empty_tree):
+    tree = _load_tree(empty_tree, 0)
+    import pdb; pdb.set_trace()
+    assert tree.balance() == -3
 
-def test_balance():
-    assert False
+
+def test_balance_general(empty_tree):
+    tree = _load_tree(empty_tree, 4)
+    assert tree.balance() == tree.depth(tree.head.l_child) - tree.depth(tree.head.r_child)
+
+
+def test_balance_empty(empty_tree):
+    tree = empty_tree
+    assert tree.balance() == 0
+
+
+def test_balance_head(empty_tree):
+    tree = empty_tree
+    tree.insert(5)
+    assert tree.balance() == 0

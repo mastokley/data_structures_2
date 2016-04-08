@@ -38,9 +38,9 @@ class BST(object):
     def size(self):
         return self._size
 
-    def depth(self, start=None):
-        starting_node = self.head if start is None else start
-        if self.head is None:
+    def depth(self, start='potato'):
+        starting_node = self.head if start == 'potato' else start
+        if starting_node is None:
             return 0
         last_node = None
         current_depth = 1
@@ -72,22 +72,20 @@ class BST(object):
             if current_depth > max_depth:
                 max_depth = current_depth
 
-#            if (current_node == start and
-#                (last_node == self.head.r_child or
-#             (self.head.r_child is None and )))
-
-# TODO: rewrite using new start cursor
-            if ((current_node == self.head and
-                 last_node == self.head.r_child) or
-                (current_node == self.head and
-                 self.head.r_child is None and
-                 last_node == self.head.l_child)):
+            if ((current_node == starting_node and
+                 last_node == starting_node.r_child) or
+                (current_node == starting_node and
+                 starting_node.r_child is None and
+                 last_node == starting_node.l_child)):
                 break
 
         return max_depth
 
     def balance(self):
-        pass
+        if self.depth() > 1:        
+            return self.depth(self.head.l_child) - self.depth(self.head.r_child)
+        else:
+            return 0
 
     def _find_parent(self, new_node, old_node):
         """Helper function for insert."""
