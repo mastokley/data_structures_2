@@ -155,6 +155,7 @@ def test_traversal_in_edge_zero(empty_tree):
     assert result == []
 
 
+# edge cases
 def test_traversal_pre_edge_zero(empty_tree):
     result = [x for x in empty_tree.traverse_pre()]
     assert result == []
