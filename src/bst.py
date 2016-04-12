@@ -15,7 +15,6 @@ class BST(object):
             float(val)
         except ValueError:
             raise ValueError('BST only accepts integers, floats.')
-
         new_node = BSTNode(val)
         if not self.head:
             self._size += 1
@@ -57,24 +56,20 @@ class BST(object):
                 current_depth += 1
                 last_node = current_node
                 current_node = current_node.l_child
-
             # if you can't move left, move down right
             elif (current_node.r_child is not None and
                   last_node != current_node.r_child):
                 current_depth += 1
                 last_node = current_node
                 current_node = current_node.r_child
-
             # if you can't move left or right, move up
             elif (current_node.parent is not None and
                   current_node != start):
                 current_depth -= 1
                 last_node = current_node
                 current_node = current_node.parent
-
             if current_depth > max_depth:
                 max_depth = current_depth
-
             # if done, exit
             if ((current_node == starting_node and
                  last_node == starting_node.r_child) or
@@ -82,7 +77,6 @@ class BST(object):
                  starting_node.r_child is None and
                  last_node == starting_node.l_child)):
                 break
-
         return max_depth
 
     def balance(self):
