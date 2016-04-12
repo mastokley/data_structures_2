@@ -1,4 +1,6 @@
 from collections import deque
+import random
+import io
 
 
 class BST(object):
@@ -103,6 +105,21 @@ class BST(object):
                 print("Value already in BST.")
                 return None
 
+    def _find_node(self, val):
+        """Helper function to return a node based on a value"""
+        try:
+            current_node = self.head
+            while True:
+                if current_node.val == val:
+                    return current_node
+                elif val > current_node.val:
+                    current_node = current_node.r_child
+                else:
+                    current_node = current_node.l_child
+        except AttributeError:
+            raise ValueError("value not in list")
+
+
     def traverse_in(self):
         """Traverse tree 'in order': left, self, right."""
         def gen_in(node):
@@ -176,6 +193,50 @@ class BST(object):
             except AttributeError:
                 pass
 
+    # def delete_node(self, val):
+    #     if not self.contains(val):
+    #         raise ValueError("Value not in Tree.")
+    #     else:
+
+
+
+
+    def write_graph(self, node=None):
+        file = io.open('graph.gv', 'w')
+        file.write(self.get_dot(node))
+        file.close()
+        print("graph.gv updated")
+
+
+    def get_dot(self, node=None):
+        """Return the tree with root 'self' by default as a dot graph for visualization"""
+        if (node is None) and (self.head is not None):
+            node = self.head
+        dots = "\t{};\n{}\n".format(node.val, "\n".join(self._get_dot(node)))
+        return "digraph bst {{{}}}".format("" if node is None else dots)
+
+    def _get_dot(self, node):
+        """Recurisvely prepare a dot graph entry for this node."""
+        if node.l_child is not None:
+            yield "\t{} -> {};".format(node.val, node.l_child.val)
+            for entry in self._get_dot(node.l_child):
+                yield entry
+        elif node.r_child is not None:
+            r = random.randint(0, 1e9)
+            yield "\tnull{} [shape=point];".format(r)
+            yield "\t{} -> null{};".format(node.val, r)
+        if node.r_child is not None:
+            yield "\t{} -> {};".format(node.val, node.r_child.val)
+            for entry in self._get_dot(node.r_child):
+                yield entry
+        elif node.l_child is not None:
+            r = random.randint(0, 1e9)
+            yield "\tnull{} [shape=point];".format(r)
+            yield "\t{} -> null{};".format(node.val, r)
+        
+
+
+
 
 class BSTNode(object):
     """Create a BST Node class."""
@@ -204,3 +265,19 @@ class BSTNode(object):
     def r_child(self, node):
         self._r_child = node
         node.parent = self
+
+if __name__ == '__main__':
+    bob = BST()
+    bob.insert(10)
+    bob.insert(15)
+    bob.insert(5)
+    bob.insert(20)
+    bob.insert(13)
+    bob.insert(12)
+    bob.insert(11)
+    bob.insert(12.5)
+    bob.insert(2)
+    bob.insert(6)
+    bob.insert(5.5)
+    bob.insert(1)
+    bob.write_graph()
