@@ -239,9 +239,26 @@ def test__find_node_missing(empty_tree):
     with pytest.raises(ValueError):
         node = tree._find_node(-1)
 
+
 def test_node_gets_noneparent(empty_tree):
     tree = empty_tree
     tree.insert(10)
     tree.head.l_child = None
+
+
+def test_balance_base_case(empty_tree):
+    tree = empty_tree
+    tree.insert(1)
+    tree.insert(2)
+    tree.insert(3)
+    assert tree.head.r_child.val == 3
+    tree.insert(4)
+    tree.insert(5)
+    assert tree.head.r_child.val == 4
+    tree.insert(6)
+    assert tree.head.r_child.val == 5
+    print_out = [n for n in tree.traverse_breadth()]
+    assert print_out == [4, 2, 5, 1, 3, 6]
+
 
 

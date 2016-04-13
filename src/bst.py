@@ -44,7 +44,7 @@ class BST(object):
     def depth(self, start='potato'):
         """Return number of levels in tree."""
         starting_node = self.head if start == 'potato' else start
-        # By returning zero we can use this function to balance trees with only one child
+        # By returning zero, we can use this to balance one-child trees
         if starting_node is None:
             return 0
         last_node = None
@@ -60,12 +60,14 @@ class BST(object):
                 current_depth += 1
                 last_node = current_node
                 current_node = current_node.l_child
+
             # if you can't move left, move down right
             elif (current_node.r_child is not None and
                   last_node != current_node.r_child):
                 current_depth += 1
                 last_node = current_node
                 current_node = current_node.r_child
+
             # if you can't move left or right, move up
             elif (current_node.parent is not None and
                   current_node != start):
@@ -74,6 +76,7 @@ class BST(object):
                 current_node = current_node.parent
             if current_depth > max_depth:
                 max_depth = current_depth
+
             # if done, exit
             if ((current_node == starting_node and
                  last_node == starting_node.r_child) or
@@ -87,7 +90,8 @@ class BST(object):
     def balance(self):
         """Return depth of subtree on left less depth of subtree on right."""
         if self.depth() > 1:
-            return self.depth(self.head.l_child) - self.depth(self.head.r_child)
+            return (self.depth(self.head.l_child) -
+                    self.depth(self.head.r_child))
         else:
             return 0
 
@@ -121,7 +125,6 @@ class BST(object):
                     current_node = current_node.l_child
         except AttributeError:
             raise ValueError("value not in list")
-
 
     def traverse_in(self):
         """Traverse tree 'in order': left, self, right."""
@@ -197,7 +200,7 @@ class BST(object):
                 pass
 
     def delete_node(self, val):
-        """Function to find and delete nodes - error handling for find in helper."""
+        """Find and delete nodes - error handling for find in helper."""
         node = self._find_node(val)
         node_balance = self.depth(node.l_child) - self.depth(node.r_child)
         if node_balance > 0:
@@ -217,15 +220,31 @@ class BST(object):
             node.val = leaf.val
             if leaf.parent.l_child == leaf:
                 leaf.parent.l_child = None
-            else: 
+            else:
                 leaf.parent.r_child = None
         except AttributeError:
             self.head = None
 
+    def _rebalance(self, node):
+        """Rotate local nodes and move up."""
+        balance_score = self.some_balance_score_determiner(node)
 
+        # option 1
 
-        
+        # if node is None:
+        #     return
+        # elif bad_balance_score :
+        #     < do the local rotation >
+        #     self._rebalance(node.parent)
 
+        # option 2
+
+        # if bad_balance_score:
+        #     < do the local rotation >
+        #     try:
+        #         self._rebalance(node.parent)
+        #     except AttributeError:
+        #         < this means I\'m finished >
 
     def write_graph(self, node=None):
         file = io.open('graph.gv', 'w')
@@ -233,9 +252,10 @@ class BST(object):
         file.close()
         print("graph.gv updated")
 
-
     def get_dot(self, node=None):
-        """Return the tree with root 'self' by default as a dot graph for visualization"""
+        """
+        Return tree with root 'self' by default as dot graph for visualization.
+        """
         if (node is None) and (self.head is not None):
             node = self.head
         dots = "\t{};\n{}\n".format(node.val, "\n".join(self._get_dot(node)))
@@ -259,9 +279,6 @@ class BST(object):
             r = random.randint(0, 1e9)
             yield "\tnull{} [shape=point];".format(r)
             yield "\t{} -> null{};".format(node.val, r)
-        
-
-
 
 
 class BSTNode(object):
