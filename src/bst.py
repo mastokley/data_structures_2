@@ -1,4 +1,6 @@
 from collections import deque
+import random
+import io
 
 
 class BST(object):
@@ -42,10 +44,12 @@ class BST(object):
     def depth(self, start='potato'):
         """Return number of levels in tree."""
         starting_node = self.head if start == 'potato' else start
+        # By returning zero we can use this function to balance trees with only one child
         if starting_node is None:
             return 0
         last_node = None
         current_depth = 1
+        saved = starting_node.parent
         starting_node.parent = None
         current_node = starting_node
         max_depth = 1
@@ -77,6 +81,7 @@ class BST(object):
                  starting_node.r_child is None and
                  last_node == starting_node.l_child)):
                 break
+        starting_node.parent = saved
         return max_depth
 
     def balance(self):
@@ -102,6 +107,21 @@ class BST(object):
             else:
                 print("Value already in BST.")
                 return None
+
+    def _find_node(self, val):
+        """Helper function to return a node based on a value"""
+        try:
+            current_node = self.head
+            while True:
+                if current_node.val == val:
+                    return current_node
+                elif val > current_node.val:
+                    current_node = current_node.r_child
+                else:
+                    current_node = current_node.l_child
+        except AttributeError:
+            raise ValueError("value not in list")
+
 
     def traverse_in(self):
         """Traverse tree 'in order': left, self, right."""
@@ -176,6 +196,73 @@ class BST(object):
             except AttributeError:
                 pass
 
+    def delete_node(self, val):
+        """Function to find and delete nodes - error handling for find in helper."""
+        node = self._find_node(val)
+        node_balance = self.depth(node.l_child) - self.depth(node.r_child)
+        if node_balance > 0:
+            leaf = node.l_child
+            target_child = 'r_child'
+        else:
+            leaf = node.r_child
+            target_child = 'l_child'
+
+        try:
+            while getattr(leaf, target_child):
+                child = getattr(leaf, target_child)
+                leaf = child
+        except AttributeError:
+            pass
+        try:
+            node.val = leaf.val
+            if leaf.parent.l_child == leaf:
+                leaf.parent.l_child = None
+            else: 
+                leaf.parent.r_child = None
+        except AttributeError:
+            self.head = None
+
+
+
+        
+
+
+    def write_graph(self, node=None):
+        file = io.open('graph.gv', 'w')
+        file.write(self.get_dot(node))
+        file.close()
+        print("graph.gv updated")
+
+
+    def get_dot(self, node=None):
+        """Return the tree with root 'self' by default as a dot graph for visualization"""
+        if (node is None) and (self.head is not None):
+            node = self.head
+        dots = "\t{};\n{}\n".format(node.val, "\n".join(self._get_dot(node)))
+        return "digraph bst {{{}}}".format("" if node is None else dots)
+
+    def _get_dot(self, node):
+        """Recurisvely prepare a dot graph entry for this node."""
+        if node.l_child is not None:
+            yield "\t{} -> {};".format(node.val, node.l_child.val)
+            for entry in self._get_dot(node.l_child):
+                yield entry
+        elif node.r_child is not None:
+            r = random.randint(0, 1e9)
+            yield "\tnull{} [shape=point];".format(r)
+            yield "\t{} -> null{};".format(node.val, r)
+        if node.r_child is not None:
+            yield "\t{} -> {};".format(node.val, node.r_child.val)
+            for entry in self._get_dot(node.r_child):
+                yield entry
+        elif node.l_child is not None:
+            r = random.randint(0, 1e9)
+            yield "\tnull{} [shape=point];".format(r)
+            yield "\t{} -> null{};".format(node.val, r)
+        
+
+
+
 
 class BSTNode(object):
     """Create a BST Node class."""
@@ -194,7 +281,8 @@ class BSTNode(object):
     @l_child.setter
     def l_child(self, node):
         self._l_child = node
-        node.parent = self
+        if node is not None:
+            node.parent = self
 
     @property
     def r_child(self):
@@ -203,4 +291,21 @@ class BSTNode(object):
     @r_child.setter
     def r_child(self, node):
         self._r_child = node
-        node.parent = self
+        if node is not None:
+            node.parent = self
+
+if __name__ == '__main__':
+    bob = BST()
+    bob.insert(10)
+    bob.insert(15)
+    bob.insert(5)
+    bob.insert(20)
+    bob.insert(13)
+    bob.insert(12)
+    bob.insert(11)
+    bob.insert(12.5)
+    bob.insert(2)
+    bob.insert(6)
+    bob.insert(5.5)
+    bob.insert(1)
+    bob.write_graph()
