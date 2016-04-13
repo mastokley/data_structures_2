@@ -44,10 +44,12 @@ class BST(object):
     def depth(self, start='potato'):
         """Return number of levels in tree."""
         starting_node = self.head if start == 'potato' else start
+        # By returning zero we can use this function to balance trees with only one child
         if starting_node is None:
             return 0
         last_node = None
         current_depth = 1
+        saved = starting_node.parent
         starting_node.parent = None
         current_node = starting_node
         max_depth = 1
@@ -79,6 +81,7 @@ class BST(object):
                  starting_node.r_child is None and
                  last_node == starting_node.l_child)):
                 break
+        starting_node.parent = saved
         return max_depth
 
     def balance(self):
@@ -193,12 +196,35 @@ class BST(object):
             except AttributeError:
                 pass
 
-    # def delete_node(self, val):
-    #     if not self.contains(val):
-    #         raise ValueError("Value not in Tree.")
-    #     else:
+    def delete_node(self, val):
+        """Function to find and delete nodes - error handling for find in helper."""
+        node = self._find_node(val)
+        node_balance = self.depth(node.l_child) - self.depth(node.r_child)
+        if node_balance > 0:
+            leaf = node.l_child
+            target_child = 'r_child'
+        else:
+            leaf = node.r_child
+            target_child = 'l_child'
+
+        try:
+            while getattr(leaf, target_child):
+                child = getattr(leaf, target_child)
+                leaf = child
+        except AttributeError:
+            pass
+        try:
+            node.val = leaf.val
+            if leaf.parent.l_child == leaf:
+                leaf.parent.l_child = None
+            else: 
+                leaf.parent.r_child = None
+        except AttributeError:
+            self.head = None
 
 
+
+        
 
 
     def write_graph(self, node=None):
@@ -255,7 +281,8 @@ class BSTNode(object):
     @l_child.setter
     def l_child(self, node):
         self._l_child = node
-        node.parent = self
+        if node is not None:
+            node.parent = self
 
     @property
     def r_child(self):
@@ -264,7 +291,8 @@ class BSTNode(object):
     @r_child.setter
     def r_child(self, node):
         self._r_child = node
-        node.parent = self
+        if node is not None:
+            node.parent = self
 
 if __name__ == '__main__':
     bob = BST()

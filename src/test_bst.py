@@ -197,17 +197,17 @@ def test_traversal_breadth_edge_one(empty_tree):
 def test_deletion_empty(empty_tree):
     tree = empty_tree
     with pytest.raises(ValueError):
-        tree.delete(5)
+        tree.delete_node(5)
 
 def test_deletion_one(empty_tree):
     tree = empty_tree
     tree.insert(5)
-    tree.delete(5)
+    tree.delete_node(5)
     assert tree == empty_tree
 
 def test_deletion_easy_list(empty_tree):
     tree = _load_tree(empty_tree, 2)
-    tree.delete(23)
+    tree.delete_node(23)
     assert tree.head.r_child.val == 100
 
 def test_deletion_hard_list(empty_tree):
@@ -216,10 +216,10 @@ def test_deletion_hard_list(empty_tree):
     comp_list = list(x for x in test_list)
     comp_list.remove(29)
     comp_list[comp_list.index(31)] = 29
-    tree.delete(31)
+    tree.delete_node(31)
     test_list = [n for n in tree.traverse_in()]
-    # assert tree.head.r_child.val == 29
-    # assert tree.head.r_child.r_child.val == 100
+    assert tree.head.r_child.val == 29
+    assert tree.head.r_child.r_child.val == 108
     assert comp_list == test_list
 
 def test__find_node_1(empty_tree):
@@ -239,5 +239,9 @@ def test__find_node_missing(empty_tree):
     with pytest.raises(ValueError):
         node = tree._find_node(-1)
 
+def test_node_gets_noneparent(empty_tree):
+    tree = empty_tree
+    tree.insert(10)
+    tree.head.l_child = None
 
 
