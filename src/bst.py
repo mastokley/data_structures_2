@@ -87,11 +87,12 @@ class BST(object):
         starting_node.parent = saved
         return max_depth
 
-    def balance(self):
+    def balance(self, node='potato'):
         """Return depth of subtree on left less depth of subtree on right."""
-        if self.depth() > 1:
-            return (self.depth(self.head.l_child) -
-                    self.depth(self.head.r_child))
+        if node is 'potato':
+            node = self.head
+        if self.depth(node) > 1:
+            return self.depth(node.l_child) - self.depth(node.r_child)
         else:
             return 0
 
@@ -227,24 +228,88 @@ class BST(object):
 
     def _rebalance(self, node):
         """Rotate local nodes and move up."""
-        balance_score = self.some_balance_score_determiner(node)
+        balance = self.balance(node)
+        try:
+            next_ = node.parent
 
-        # option 1
+            if balance > 1:
+                balance_2 = self.balance(node.l_child)
+                if balance_2 >= 0:  # plain ll scenario
+                    self._rotate_c(node)
+                else:  # we enter a lr scenario
+                    self._rotate_cc(node.l_child)
+                    self._rotate_c(node)
+                next_ = node.parent.parent
+            elif balance < -1:
+                balance_2 = self.balance(node.r_child)
+                if balance_2 <= 0:  # plain rr scenario
+                    self._rotate_cc(node)
+                else:  # we enter a rl scenario
+                    self._rotate_c(node.r_child)
+                    self._rotate_cc(node)
+                next_ = node.parent.parent
+            self._rebalance(next_)  # might hit same position twice
+        except AttributeError:
+            return self.head == node  # we're done
 
-        # if node is None:
-        #     return
-        # elif bad_balance_score :
-        #     < do the local rotation >
-        #     self._rebalance(node.parent)
+    def _rotate_cc(self, node):
+        """Rotate counterclockwise."""
+        node_a = node
+        node_b = node.r_child
+        node_c = node.r_child.l_child
 
-        # option 2
+        if node.parent is None:
+            self.head = node_b
+            node_b.parent = None
+        else:
+            node_a.parent.r_child = node_b  # sets node_b.parent properly
+            node_b.parent = node_a.parent
 
-        # if bad_balance_score:
-        #     < do the local rotation >
-        #     try:
-        #         self._rebalance(node.parent)
-        #     except AttributeError:
-        #         < this means I\'m finished >
+        node_b.l_child = node_a  # sets node_a.parent to node_b
+        node_a.r_child = node_c  # set node_c.parent to node_a
+
+    def _rotate_c(self, node):
+        """Rotate clockwise."""
+        node_a = node
+        node_b = node.l_child
+        node_c = node.l_child.r_child
+
+        if node.parent is None:
+            self.head = node_b
+            node_b.parent = None
+        else:
+            node_a.parent.l_child = node_b  # sets node_b.parent properly
+            node_b.parent = node_a.parent
+
+        node_b.r_child = node_a  # sets node_a.parent to node_b
+        node_a.l_child = node_c  # set node_c.parent to node_a
+
+    # we can't use getattr() with properties like we want :(
+    """
+    def _rotate(self, node, direction):
+        \"""Rotate counterclockwise or clockwise.\"""
+
+        if direction == 'counterclockwise':
+            child, other_child = 'r_child', 'l_child'
+        elif direction == 'clockwise':
+            child, other_child = 'l_child', 'r_child'
+        else:
+            raise ValueError("Direction must be 'clockwise' or 'counterclockwise'.")
+
+        node_a = node
+        node_b = getattr(node, child)
+        node_c = getattr(node_b, other_child)
+        # print(node_c.val)
+
+        if node_a == self.head:
+            self.head = node_b
+
+        node_b.parent = node_a.parent
+        target = getattr(node_b, other_child)
+        target = node_a
+        target = getattr(node_a, child)
+        target = node_c
+    """
 
     def write_graph(self, node=None):
         file = io.open('graph.gv', 'w')
@@ -312,17 +377,27 @@ class BSTNode(object):
             node.parent = self
 
 if __name__ == '__main__':
-    bob = BST()
-    bob.insert(10)
-    bob.insert(15)
-    bob.insert(5)
-    bob.insert(20)
-    bob.insert(13)
-    bob.insert(12)
-    bob.insert(11)
-    bob.insert(12.5)
-    bob.insert(2)
-    bob.insert(6)
-    bob.insert(5.5)
-    bob.insert(1)
-    bob.write_graph()
+    tree = BST()
+    tree.insert(1)
+    tree.insert(3)
+    tree.insert(2)
+    tree.insert(4)
+
+    mynode = tree._find_node(1)
+    tree._rotate_cc(mynode)
+    tree.write_graph()
+
+    # bob = BST()
+    # bob.insert(10)
+    # bob.insert(15)
+    # bob.insert(5)
+    # bob.insert(20)
+    # bob.insert(13)
+    # bob.insert(12)
+    # bob.insert(11)
+    # bob.insert(12.5)
+    # bob.insert(2)
+    # bob.insert(6)
+    # bob.insert(5.5)
+    # bob.insert(1)
+    # bob.write_graph()
