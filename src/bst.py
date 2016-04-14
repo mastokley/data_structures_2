@@ -9,7 +9,10 @@ class BST(object):
     def __init__(self, node=None):
         """Instantiate a new binary sorted tree object."""
         self.head = node
-        self._size = 0 if self.head is None else self._size == 1
+        if self.head is None:
+            self._size = 0
+        else:
+            self._size = 1
 
     def insert(self, val):
         """Insert a node into binary search tree."""
