@@ -232,27 +232,24 @@ class BST(object):
 
     def _rebalance(self, node):
         """Rotate local nodes and move up."""
-        balance = self.balance(node)
         try:
-            next_ = node.parent
-
-            if balance > 1:
-                balance_2 = self.balance(node.l_child)
-                if balance_2 >= 0:  # plain ll scenario
-                    self._rotate_c(node)
-                else:  # we enter a lr scenario
-                    self._rotate_cc(node.l_child)
-                    self._rotate_c(node)
-                next_ = node.parent.parent
-            elif balance < -1:
-                balance_2 = self.balance(node.r_child)
-                if balance_2 <= 0:  # plain rr scenario
-                    self._rotate_cc(node)
-                else:  # we enter a rl scenario
-                    self._rotate_c(node.r_child)
-                    self._rotate_cc(node)
-                next_ = node.parent.parent
-            self._rebalance(next_)  # might hit same position twice
+            while True:
+                balance = self.balance(node)
+                if balance > 1:
+                    balance_2 = self.balance(node.l_child)
+                    if balance_2 >= 0:  # plain ll scenario
+                        self._rotate_c(node)
+                    else:  # we enter a lr scenario
+                        self._rotate_cc(node.l_child)
+                        self._rotate_c(node)
+                elif balance < -1:
+                    balance_2 = self.balance(node.r_child)
+                    if balance_2 <= 0:  # plain rr scenario
+                        self._rotate_cc(node)
+                    else:  # we enter a rl scenario
+                        self._rotate_c(node.r_child)
+                        self._rotate_cc(node)
+                node = node.parent
         except AttributeError:
             return self.head == node  # we're done
 
