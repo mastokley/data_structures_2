@@ -228,6 +228,7 @@ class BST(object):
                 leaf.parent.r_child = None
         except AttributeError:
             self.head = None
+        self._size -= 1
 
     def _rebalance(self, node):
         """Rotate local nodes and move up."""
