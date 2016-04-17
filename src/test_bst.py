@@ -90,29 +90,30 @@ def test_depth_full_2(empty_tree):
     empty_tree.insert(5)
     empty_tree.insert(7)
     empty_tree.insert(6)
-    assert empty_tree.depth() == 3
+    assert empty_tree.depth() == 2
 
 
 def test_depth_full_craggy(empty_tree):
     for val in [2, 3, 4, 1, 10, 11, 12, 7, 8, 9, ]:
         empty_tree.insert(val)
-    assert empty_tree.depth() == 7
+    assert empty_tree.depth() == 4
 
 
 def test_depth_no_right(empty_tree):
     for val in [12, 3, 4, 1, 10, 11, 2, 7, 8, 9, ]:
         empty_tree.insert(val)
-    assert empty_tree.depth() == 7
+    assert empty_tree.depth() == 4
 
 
 def test_balance_0(empty_tree):
     tree = _load_tree(empty_tree, 0)
-    assert tree.balance() == -3
+    assert tree.balance() == -1
 
 
 def test_balance_general(empty_tree):
     tree = _load_tree(empty_tree, 4)
-    assert tree.balance() == tree.depth(tree.head.l_child) - tree.depth(tree.head.r_child)
+    assert tree.balance() == (tree.depth(tree.head.l_child) -
+                              tree.depth(tree.head.r_child))
 
 
 def test_balance_empty(empty_tree):
@@ -194,10 +195,12 @@ def test_traversal_breadth_edge_one(empty_tree):
     result = [x for x in empty_tree.traverse_breadth()]
     assert result == [1000]
 
+
 def test_deletion_empty(empty_tree):
     tree = empty_tree
     with pytest.raises(ValueError):
         tree.delete_node(5)
+
 
 def test_deletion_one(empty_tree):
     tree = empty_tree
@@ -205,10 +208,12 @@ def test_deletion_one(empty_tree):
     tree.delete_node(5)
     assert tree == empty_tree
 
+
 def test_deletion_easy_list(empty_tree):
     tree = _load_tree(empty_tree, 2)
     tree.delete_node(23)
     assert tree.head.r_child.val == 100
+
 
 def test_deletion_hard_list(empty_tree):
     tree = _load_tree(empty_tree, 4)
@@ -218,30 +223,111 @@ def test_deletion_hard_list(empty_tree):
     comp_list[comp_list.index(31)] = 29
     tree.delete_node(31)
     test_list = [n for n in tree.traverse_in()]
-    assert tree.head.r_child.val == 29
-    assert tree.head.r_child.r_child.val == 108
+    assert tree.head.r_child.val == 22
+    assert tree.head.r_child.r_child.val == 29
     assert comp_list == test_list
+
 
 def test__find_node_1(empty_tree):
     tree = _load_tree(empty_tree, 0)
-    node = tree._find_node(1)
-    assert tree.head == node
-    assert node.val == 1
-
-def test__find_node_2(empty_tree):
-    tree = _load_tree(empty_tree, 0)
     node = tree._find_node(2)
-    assert node.parent == tree.head
-    assert tree.head.r_child == node
+    assert tree.head == node
+    assert node.val == 2
+
 
 def test__find_node_missing(empty_tree):
     tree = _load_tree(empty_tree, 0)
     with pytest.raises(ValueError):
         node = tree._find_node(-1)
 
+
 def test_node_gets_noneparent(empty_tree):
     tree = empty_tree
     tree.insert(10)
     tree.head.l_child = None
+
+
+def test_bal_helper_rr_sparse(empty_tree):
+    tree = empty_tree
+    tree.insert(1)
+    tree.insert(3)
+    tree.insert(4)
+    printout = [n for n in tree.traverse_breadth()]
+    assert printout == [3, 1, 4, ]
+    tree.write_graph()
+
+
+def test_bal_helper_rr(empty_tree):
+    tree = empty_tree
+    tree.insert(1)
+    tree.insert(3)
+    tree.insert(2)
+    tree.insert(4)
+    printout = [n for n in tree.traverse_breadth()]
+    assert printout == [2, 1, 3, 4]
+    tree.write_graph()
+
+
+def test_bal_helper_ll_sparse(empty_tree):
+    tree = empty_tree
+    tree.insert(4)
+    tree.insert(3)
+    tree.insert(1)
+    node = tree._find_node(4)
+    # tree._rotate_c(node)
+    printout = [n for n in tree.traverse_breadth()]
+    assert printout == [3, 1, 4, ]
+    tree.write_graph()
+
+
+def test_bal_helper_ll(empty_tree):
+    tree = empty_tree
+    tree.insert(4)
+    tree.insert(2)
+    tree.insert(3)
+    tree.insert(1)
+    printout = [n for n in tree.traverse_breadth()]
+    assert printout == [3, 2, 4, 1]
+    tree.write_graph()
+
+
+def test_bal_helper_ll_complex(empty_tree):
+    tree = empty_tree
+    tree.insert(5)
+    tree.insert(3)
+    tree.insert(2)
+    tree.insert(4)
+    tree.insert(1)
+    tree._rebalance(tree._find_node(1))
+    printout = [n for n in tree.traverse_breadth()]
+    assert printout == [3, 2, 5, 1, 4]
+
+
+def test_bal_helper_lr_complex(empty_tree):
+    tree = empty_tree
+    tree.insert(5)
+    tree.insert(3)
+    tree.insert(2)
+    tree.insert(4)
+    tree.insert(4.5)
+    tree._rebalance(tree._find_node(4.5))
+    printout = [n for n in tree.traverse_breadth()]
+    assert printout == [3, 2, 4.5, 4, 5]
+
+
+def test_rebalance_base_case(empty_tree):
+    tree = empty_tree
+    tree.insert(1)
+    tree.insert(2)
+    tree.insert(3)
+    assert tree.head.r_child.val == 3
+    tree.insert(4)
+    tree.insert(5)
+    assert tree.head.r_child.val == 4
+    tree.insert(6)
+    assert tree.head.r_child.val == 5
+    print_out = [n for n in tree.traverse_breadth()]
+    assert print_out == [4, 2, 5, 1, 3, 6]
+
 
 

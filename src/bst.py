@@ -9,7 +9,10 @@ class BST(object):
     def __init__(self, node=None):
         """Instantiate a new binary sorted tree object."""
         self.head = node
-        self._size = 0 if self.head is None else self._size == 1
+        if self.head is None:
+            self._size = 0
+        else:
+            self._size = 1
 
     def insert(self, val):
         """Insert a node into binary search tree."""
@@ -29,6 +32,7 @@ class BST(object):
                     new_parent.l_child = new_node
                 else:
                     new_parent.r_child = new_node
+        self._rebalance(new_node)
 
     def contains(self, val):
         """Return true if value in tree."""
@@ -44,7 +48,7 @@ class BST(object):
     def depth(self, start='potato'):
         """Return number of levels in tree."""
         starting_node = self.head if start == 'potato' else start
-        # By returning zero we can use this function to balance trees with only one child
+        # By returning zero, we can use this to balance one-child trees
         if starting_node is None:
             return 0
         last_node = None
@@ -60,12 +64,14 @@ class BST(object):
                 current_depth += 1
                 last_node = current_node
                 current_node = current_node.l_child
+
             # if you can't move left, move down right
             elif (current_node.r_child is not None and
                   last_node != current_node.r_child):
                 current_depth += 1
                 last_node = current_node
                 current_node = current_node.r_child
+
             # if you can't move left or right, move up
             elif (current_node.parent is not None and
                   current_node != start):
@@ -74,6 +80,7 @@ class BST(object):
                 current_node = current_node.parent
             if current_depth > max_depth:
                 max_depth = current_depth
+
             # if done, exit
             if ((current_node == starting_node and
                  last_node == starting_node.r_child) or
@@ -84,10 +91,12 @@ class BST(object):
         starting_node.parent = saved
         return max_depth
 
-    def balance(self):
+    def balance(self, node='potato'):
         """Return depth of subtree on left less depth of subtree on right."""
-        if self.depth() > 1:
-            return self.depth(self.head.l_child) - self.depth(self.head.r_child)
+        if node is 'potato':
+            node = self.head
+        if self.depth(node) > 1:
+            return self.depth(node.l_child) - self.depth(node.r_child)
         else:
             return 0
 
@@ -121,7 +130,6 @@ class BST(object):
                     current_node = current_node.l_child
         except AttributeError:
             raise ValueError("value not in list")
-
 
     def traverse_in(self):
         """Traverse tree 'in order': left, self, right."""
@@ -197,7 +205,7 @@ class BST(object):
                 pass
 
     def delete_node(self, val):
-        """Function to find and delete nodes - error handling for find in helper."""
+        """Find and delete nodes - error handling for find in helper."""
         node = self._find_node(val)
         node_balance = self.depth(node.l_child) - self.depth(node.r_child)
         if node_balance > 0:
@@ -215,17 +223,107 @@ class BST(object):
             pass
         try:
             node.val = leaf.val
+            reb_node = leaf.parent
             if leaf.parent.l_child == leaf:
-                leaf.parent.l_child = None
-            else: 
-                leaf.parent.r_child = None
+                leaf.parent.l_child = leaf.r_child
+            else:
+                leaf.parent.r_child = leaf.l_child
+            if reb_node:
+                self._rebalance(reb_node)
         except AttributeError:
             self.head = None
+        self._size -= 1
 
+    def _rebalance(self, node):
+        """Rotate local nodes and move up."""
+        balance = self.balance(node)
+        try:
+            next_ = node.parent
 
+            if balance > 1:
+                balance_2 = self.balance(node.l_child)
+                if balance_2 >= 0:  # plain ll scenario
+                    self._rotate_c(node)
+                else:  # we enter a lr scenario
+                    self._rotate_cc(node.l_child)
+                    self._rotate_c(node)
+                next_ = node.parent.parent
+            elif balance < -1:
+                balance_2 = self.balance(node.r_child)
+                if balance_2 <= 0:  # plain rr scenario
+                    self._rotate_cc(node)
+                else:  # we enter a rl scenario
+                    self._rotate_c(node.r_child)
+                    self._rotate_cc(node)
+                next_ = node.parent.parent
+            self._rebalance(next_)  # might hit same position twice
+        except AttributeError:
+            return self.head == node  # we're done
 
-        
+    def _rotate_cc(self, node):
+        """Rotate counterclockwise."""
+        node_a = node
+        node_b = node.r_child
+        node_c = node.r_child.l_child
 
+        if node.parent is None:
+            self.head = node_b
+            node_b.parent = None
+        else:
+            if node_a.parent.val < node_a.val:
+                node_a.parent.r_child = node_b  # sets node_b.parent properly
+            else:
+                node_a.parent.l_child = node_b
+            # node_b.parent = node_a.parent
+
+        node_b.l_child = node_a  # sets node_a.parent to node_b
+        node_a.r_child = node_c  # set node_c.parent to node_a
+
+    def _rotate_c(self, node):
+        """Rotate clockwise."""
+        node_a = node
+        node_b = node.l_child
+        node_c = node.l_child.r_child
+
+        if node.parent is None:
+            self.head = node_b
+            node_b.parent = None
+        else:
+            if node_a.parent.val < node_a.val:
+                node_a.parent.r_child = node_b  # sets node_b.parent properly
+            else:
+                node_a.parent.l_child = node_b
+            # node_b.parent = node_a.parent
+
+        node_b.r_child = node_a  # sets node_a.parent to node_b
+        node_a.l_child = node_c  # set node_c.parent to node_a
+
+    # we can't use getattr() with properties like we want :(
+    """
+    def _rotate(self, node, direction):
+        \"""Rotate counterclockwise or clockwise.\"""
+
+        if direction == 'counterclockwise':
+            child, other_child = 'r_child', 'l_child'
+        elif direction == 'clockwise':
+            child, other_child = 'l_child', 'r_child'
+        else:
+            raise ValueError("Direction must be 'clockwise' or 'counterclockwise'.")
+
+        node_a = node
+        node_b = getattr(node, child)
+        node_c = getattr(node_b, other_child)
+        # print(node_c.val)
+
+        if node_a == self.head:
+            self.head = node_b
+
+        node_b.parent = node_a.parent
+        target = getattr(node_b, other_child)
+        target = node_a
+        target = getattr(node_a, child)
+        target = node_c
+    """
 
     def write_graph(self, node=None):
         file = io.open('graph.gv', 'w')
@@ -233,9 +331,10 @@ class BST(object):
         file.close()
         print("graph.gv updated")
 
-
     def get_dot(self, node=None):
-        """Return the tree with root 'self' by default as a dot graph for visualization"""
+        """
+        Return tree with root 'self' by default as dot graph for visualization.
+        """
         if (node is None) and (self.head is not None):
             node = self.head
         dots = "\t{};\n{}\n".format(node.val, "\n".join(self._get_dot(node)))
@@ -259,9 +358,6 @@ class BST(object):
             r = random.randint(0, 1e9)
             yield "\tnull{} [shape=point];".format(r)
             yield "\t{} -> null{};".format(node.val, r)
-        
-
-
 
 
 class BSTNode(object):
@@ -295,17 +391,27 @@ class BSTNode(object):
             node.parent = self
 
 if __name__ == '__main__':
-    bob = BST()
-    bob.insert(10)
-    bob.insert(15)
-    bob.insert(5)
-    bob.insert(20)
-    bob.insert(13)
-    bob.insert(12)
-    bob.insert(11)
-    bob.insert(12.5)
-    bob.insert(2)
-    bob.insert(6)
-    bob.insert(5.5)
-    bob.insert(1)
-    bob.write_graph()
+    tree = BST()
+    tree.insert(1)
+    tree.insert(3)
+    tree.insert(2)
+    tree.insert(4)
+
+    mynode = tree._find_node(1)
+    tree._rotate_cc(mynode)
+    tree.write_graph()
+
+    # bob = BST()
+    # bob.insert(10)
+    # bob.insert(15)
+    # bob.insert(5)
+    # bob.insert(20)
+    # bob.insert(13)
+    # bob.insert(12)
+    # bob.insert(11)
+    # bob.insert(12.5)
+    # bob.insert(2)
+    # bob.insert(6)
+    # bob.insert(5.5)
+    # bob.insert(1)
+    # bob.write_graph()
