@@ -90,24 +90,24 @@ def test_depth_full_2(empty_tree):
     empty_tree.insert(5)
     empty_tree.insert(7)
     empty_tree.insert(6)
-    assert empty_tree.depth() == 3
+    assert empty_tree.depth() == 2
 
 
 def test_depth_full_craggy(empty_tree):
     for val in [2, 3, 4, 1, 10, 11, 12, 7, 8, 9, ]:
         empty_tree.insert(val)
-    assert empty_tree.depth() == 7
+    assert empty_tree.depth() == 4
 
 
 def test_depth_no_right(empty_tree):
     for val in [12, 3, 4, 1, 10, 11, 2, 7, 8, 9, ]:
         empty_tree.insert(val)
-    assert empty_tree.depth() == 7
+    assert empty_tree.depth() == 4
 
 
 def test_balance_0(empty_tree):
     tree = _load_tree(empty_tree, 0)
-    assert tree.balance() == -3
+    assert tree.balance() == -1
 
 
 def test_balance_general(empty_tree):
@@ -223,23 +223,16 @@ def test_deletion_hard_list(empty_tree):
     comp_list[comp_list.index(31)] = 29
     tree.delete_node(31)
     test_list = [n for n in tree.traverse_in()]
-    assert tree.head.r_child.val == 29
-    assert tree.head.r_child.r_child.val == 108
+    assert tree.head.r_child.val == 22
+    assert tree.head.r_child.r_child.val == 29
     assert comp_list == test_list
 
 
 def test__find_node_1(empty_tree):
     tree = _load_tree(empty_tree, 0)
-    node = tree._find_node(1)
-    assert tree.head == node
-    assert node.val == 1
-
-
-def test__find_node_2(empty_tree):
-    tree = _load_tree(empty_tree, 0)
     node = tree._find_node(2)
-    assert node.parent == tree.head
-    assert tree.head.r_child == node
+    assert tree.head == node
+    assert node.val == 2
 
 
 def test__find_node_missing(empty_tree):
@@ -259,7 +252,6 @@ def test_bal_helper_rr_sparse(empty_tree):
     tree.insert(1)
     tree.insert(3)
     tree.insert(4)
-    tree._rotate_cc(tree.head)
     printout = [n for n in tree.traverse_breadth()]
     assert printout == [3, 1, 4, ]
     tree.write_graph()
@@ -271,9 +263,8 @@ def test_bal_helper_rr(empty_tree):
     tree.insert(3)
     tree.insert(2)
     tree.insert(4)
-    tree._rotate_cc(tree.head)
     printout = [n for n in tree.traverse_breadth()]
-    assert printout == [3, 1, 4, 2]
+    assert printout == [2, 1, 3, 4]
     tree.write_graph()
 
 
@@ -283,7 +274,7 @@ def test_bal_helper_ll_sparse(empty_tree):
     tree.insert(3)
     tree.insert(1)
     node = tree._find_node(4)
-    tree._rotate_c(node)
+    # tree._rotate_c(node)
     printout = [n for n in tree.traverse_breadth()]
     assert printout == [3, 1, 4, ]
     tree.write_graph()
@@ -295,10 +286,8 @@ def test_bal_helper_ll(empty_tree):
     tree.insert(2)
     tree.insert(3)
     tree.insert(1)
-    node = tree._find_node(4)
-    tree._rotate_c(node)
     printout = [n for n in tree.traverse_breadth()]
-    assert printout == [2, 1, 4, 3]
+    assert printout == [3, 2, 4, 1]
     tree.write_graph()
 
 
@@ -323,7 +312,7 @@ def test_bal_helper_lr_complex(empty_tree):
     tree.insert(4.5)
     tree._rebalance(tree._find_node(4.5))
     printout = [n for n in tree.traverse_breadth()]
-    assert printout == [4, 3, 5, 2, 4.5]
+    assert printout == [3, 2, 4.5, 4, 5]
 
 
 def test_rebalance_base_case(empty_tree):

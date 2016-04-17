@@ -32,6 +32,7 @@ class BST(object):
                     new_parent.l_child = new_node
                 else:
                     new_parent.r_child = new_node
+        self._rebalance(new_node)
 
     def contains(self, val):
         """Return true if value in tree."""
@@ -222,10 +223,13 @@ class BST(object):
             pass
         try:
             node.val = leaf.val
+            reb_node = leaf.parent
             if leaf.parent.l_child == leaf:
-                leaf.parent.l_child = None
+                leaf.parent.l_child = leaf.r_child
             else:
-                leaf.parent.r_child = None
+                leaf.parent.r_child = leaf.l_child
+            if reb_node:
+                self._rebalance(reb_node)
         except AttributeError:
             self.head = None
         self._size -= 1
@@ -266,8 +270,11 @@ class BST(object):
             self.head = node_b
             node_b.parent = None
         else:
-            node_a.parent.r_child = node_b  # sets node_b.parent properly
-            node_b.parent = node_a.parent
+            if node_a.parent.val < node_a.val:
+                node_a.parent.r_child = node_b  # sets node_b.parent properly
+            else:
+                node_a.parent.l_child = node_b
+            # node_b.parent = node_a.parent
 
         node_b.l_child = node_a  # sets node_a.parent to node_b
         node_a.r_child = node_c  # set node_c.parent to node_a
@@ -282,8 +289,11 @@ class BST(object):
             self.head = node_b
             node_b.parent = None
         else:
-            node_a.parent.l_child = node_b  # sets node_b.parent properly
-            node_b.parent = node_a.parent
+            if node_a.parent.val < node_a.val:
+                node_a.parent.r_child = node_b  # sets node_b.parent properly
+            else:
+                node_a.parent.l_child = node_b
+            # node_b.parent = node_a.parent
 
         node_b.r_child = node_a  # sets node_a.parent to node_b
         node_a.l_child = node_c  # set node_c.parent to node_a
