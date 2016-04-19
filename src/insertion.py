@@ -1,34 +1,35 @@
 def insert_sort(list_, key=None):
+    outlist = list_
     if key is None:
-        for outer_index in range(len(list_)):
+        for outer_index in range(len(outlist)):
             inner_index = outer_index
             try:
-                while list_[outer_index] < list_[inner_index - 1]:
-                    _swap(list_, inner_index)
+                while outlist[outer_index] < outlist[inner_index - 1]:
+                    _swap(outlist, inner_index)
                     inner_index -= 1
             except IndexError:
                 pass
     # if key is passed in as string, can't use it to invoke attribute
-    elif hasattr(list_[0], key):
-        for outer_index in range(len(list_)):
+    elif hasattr(outlist[0], key):
+        for outer_index in range(len(outlist)):
             inner_index = outer_index
             try:
-                while (getattr(list_[outer_index], key) <
-                       getattr(list_[inner_index - 1], key)):
-                    _swap(list_, inner_index)
+                while (getattr(outlist[outer_index], key) <
+                       getattr(outlist[inner_index - 1], key)):
+                    _swap(outlist, inner_index)
                     inner_index -= 1
             except IndexError:
                 pass
     elif hasattr(key, '__call__'):
-        for outer_index in range(len(list_)):
+        for outer_index in range(len(outlist)):
             inner_index = outer_index
             try:
-                while key(list_[outer_index]) < key(list_[inner_index - 1]):
-                    _swap(list_, inner_index)
+                while key(outlist[outer_index]) < key(outlist[inner_index - 1]):
+                    _swap(outlist, inner_index)
                     inner_index -= 1
             except IndexError:
                 pass
-    return list_
+    return outlist
 
     # attempt at pythonic idiom
 
