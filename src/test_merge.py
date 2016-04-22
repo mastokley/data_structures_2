@@ -1,5 +1,10 @@
 import pytest
 import itertools as it
+from .test_insertion import Newple
+
+npl_a = Newple([1,1])
+npl_b = Newple([2,5])
+npl_c = Newple([2,0])
 
 MERGE_PARAMS = [
     ([0], [], [0]),
@@ -23,6 +28,7 @@ MERGE_SORT_PARAMS = [
     ([2, 3, 1], [1, 2, 3]),
     ([3, 2, 1], [1, 2, 3]),
     ([3, 1, 2], [1, 2, 3]),
+    ([npl_a, npl_b, npl_c,], [npl_a, npl_b, npl_c,]),
 ]
 
 
@@ -42,6 +48,10 @@ def test_merge_sort_bluntly():
     """Takes some time to run."""
     # 3,628,800 for 10 nPr 10
     from merge import merge_sort
-    for permutation in it.permutations(range(10)):
-        expected = [x for x in range(10)]
+    for permutation in it.permutations(range(5)):
+        expected = [x for x in range(5)]
         assert merge_sort([*permutation]) == expected
+
+
+
+
