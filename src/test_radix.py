@@ -1,10 +1,5 @@
 import pytest
 import itertools as it
-# from .test_insertion import Newple
-
-# npl_a = Newple([1,1])
-# npl_b = Newple([2,5])
-# npl_c = Newple([2,0])
 
 RADIX_PARAMS = [
     ([0], [], [0]),
@@ -28,7 +23,6 @@ RADIX_SORT_PARAMS = [
     ([2, 3, 1], [1, 2, 3]),
     ([3, 2, 1], [1, 2, 3]),
     ([3, 1, 2], [1, 2, 3]),
-    # ([npl_a, npl_b, npl_c,], [npl_a, npl_b, npl_c,]),
 ]
 
 
