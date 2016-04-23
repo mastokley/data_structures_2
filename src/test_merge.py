@@ -42,6 +42,6 @@ def test_merge_sort_bluntly():
     """Takes some time to run."""
     # 3,628,800 for 10 nPr 10
     from merge import merge_sort
-    for permutation in it.permutations(range(10)):
-        expected = [x for x in range(10)]
+    for permutation in it.permutations(range(5)):
+        expected = [x for x in range(5)]
         assert merge_sort([*permutation]) == expected

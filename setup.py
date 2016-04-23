@@ -14,7 +14,7 @@ setup(
         "deque",
     },
     package_dir={'': 'src'},
-    install_requires=[],
+    install_requires=['numpy'],
     extras_require={
         'test': ['pytest', 'tox']
     }
