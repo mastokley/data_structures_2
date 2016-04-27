@@ -38,7 +38,7 @@ def test_newple_2():
 
 @pytest.mark.parametrize(('input', 'expected'), TEST_LIST)
 def test_insertion(input, expected):
-    from insertion import insert_sort
+    from .insertion import insert_sort
     assert insert_sort(input) == expected
 
 # @pytest.mark.parametrize(('input', 'expected'), TEST_LIST)

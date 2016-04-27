@@ -34,23 +34,24 @@ MERGE_SORT_PARAMS = [
 
 @pytest.mark.parametrize(('in1', 'in2', 'expected'), MERGE_PARAMS)
 def test_merge(in1, in2, expected):
-    from merge import merge
+    from .merge import merge
     assert merge(in1, in2) == expected
 
 
 @pytest.mark.parametrize(('inlist', 'expected'), MERGE_SORT_PARAMS)
 def test_merge_sort(inlist, expected):
-    from merge import merge_sort
+    from .merge import merge_sort
     assert merge_sort(inlist) == expected
 
 
 def test_merge_sort_bluntly():
     """Takes some time to run."""
     # 3,628,800 for 10 nPr 10
-    from merge import merge_sort
+    from .merge import merge_sort
     for permutation in it.permutations(range(5)):
         expected = [x for x in range(5)]
-        assert merge_sort([*permutation]) == expected
+        perms = [p for p in permutation]
+        assert merge_sort(perms) == expected
 
 
 
