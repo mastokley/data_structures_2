@@ -338,7 +338,7 @@ class BST(object):
         if (node is None) and (self.head is not None):
             node = self.head
         dots = "\t{};\n{}\n".format(node.val, "\n".join(self._get_dot(node)))
-        return "digraph bst {{{}}}".format("" if node is None else dots)
+        return u"digraph bst {{{}}}".format("" if node is None else dots)
 
     def _get_dot(self, node):
         """Recurisvely prepare a dot graph entry for this node."""

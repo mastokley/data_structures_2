@@ -10,7 +10,7 @@ DIVERSE_TREES = [
 
 @pytest.fixture
 def empty_tree():
-    from bst import BST
+    from .bst import BST
     empty_tree = BST()
     return empty_tree
 

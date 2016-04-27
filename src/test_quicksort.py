@@ -1,6 +1,6 @@
 import pytest
 import itertools as it
-from test_insertion import Newple
+from .test_insertion import Newple
 
 npl_a = Newple([1, 1])
 npl_b = Newple([2, 5])
@@ -24,7 +24,7 @@ PARAMS = [
 
 @pytest.mark.parametrize(('inlist', 'expected'), PARAMS)
 def test_sort(inlist, expected):
-    from quicksort import quicksort
+    from .quicksort import quicksort
     assert [x for x in quicksort(inlist)] == expected
 
 

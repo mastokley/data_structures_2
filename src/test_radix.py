@@ -40,15 +40,16 @@ RADIX_SORT_PARAMS = [
 
 @pytest.mark.parametrize(('inlist', 'expected'), RADIX_SORT_PARAMS)
 def test_radix_sort(inlist, expected):
-    from radix import radix_sort
+    from .radix import radix_sort
     assert radix_sort(inlist) == expected
 
 
 def test_radix_sort_bluntly():
     """Takes some time to run."""
     # 3,628,800 for 10 nPr 10
-    from radix import radix_sort
+    from .radix import radix_sort
     for permutation in it.permutations(range(5)):
         expected = [x for x in range(5)]
-        assert radix_sort([*permutation]) == expected
+        perms = [e for e in permutation]
+        assert radix_sort(perms) == expected
 
