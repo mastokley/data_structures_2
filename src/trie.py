@@ -2,6 +2,7 @@
 
 import re
 
+
 class Trie(object):
 
     def __init__(self):
@@ -25,14 +26,18 @@ class Trie(object):
         token = "".join([token, '$'])
         node = self._container
         for char in token:
-            try: 
+            try:
                 node = node[char]
             except KeyError:
                 return False
         return True
 
-    
-                
-            
-
-
+    def traversal(self, node=None):
+        if node is None:
+            node = self._container
+        for edge in node:
+            if edge == '$':
+                yield ''
+            else:
+                for yielded in self.traversal(node=node[edge]):
+                    yield edge + yielded
