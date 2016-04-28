@@ -73,3 +73,46 @@ def test_trie_traversal_edge_zero():
     output = [w for w in trie.traversal()]
     expected = []
     assert sorted(expected) == sorted(output)
+
+    
+def test_trie_traversal_subset():
+    from .trie import Trie
+    trie = Trie()
+    trie._container = TEST_TRIE
+    output = [w for w in trie.autocomplete('th')]
+    expected = ['the', "that's", 'them', 'that']
+    assert sorted(expected) == sorted(output)
+
+
+def test_autocomplete_mulitlist():
+    from .trie import Trie
+    trie = Trie()
+    trie._container = TEST_TRIE
+    out = trie.autocomplete_multilist("that's")
+    expected = {
+        't': sorted(['the', "that's", 'them', 'that']),
+        'th': sorted(['the', "that's", 'them', 'that']),
+        'tha': sorted(["that's", 'that']),
+        'that': sorted(["that's", 'that']),
+        "that'": sorted(["that's"]),
+        "that's": sorted(["that's"]),
+    }
+    assert out == expected
+
+
+def test_autocomplete_mulitlist():
+    from .trie import Trie
+    trie = Trie()
+    trie._container = TEST_TRIE
+    out = trie.autocomplete_multilist("that'sss")
+    expected = {
+        't': sorted(['the', "that's", 'them', 'that']),
+        'th': sorted(['the', "that's", 'them', 'that']),
+        'tha': sorted(["that's", 'that']),
+        'that': sorted(["that's", 'that']),
+        "that'": sorted(["that's"]),
+        "that's": sorted(["that's"]),
+        "that'ss": sorted([]),
+        "that'sss": sorted([]),
+    }
+    assert out == expected
