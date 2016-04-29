@@ -40,7 +40,7 @@ class Trie(object):
                 yield ''
             else:
                 for yield_ in self.traversal(node=node[edge]):
-                    yield edge + yield_
+                    yield ''.join([edge + yield_])
 
     def autocomplete(self, token=''):
         """Return a list of potential completions for given token."""
