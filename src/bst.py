@@ -1,6 +1,6 @@
-from collections import deque
-import random
 import io
+import random
+from collections import deque
 
 
 class BST(object):
@@ -60,7 +60,7 @@ class BST(object):
         while True:
             # if moving down, keep moving down and left
             if (current_node.l_child is not None and
-                last_node == current_node.parent):
+               last_node == current_node.parent):
                 current_depth += 1
                 last_node = current_node
                 current_node = current_node.l_child

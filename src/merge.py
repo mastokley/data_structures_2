@@ -4,6 +4,10 @@ from random import randint
 
 
 def merge(list1, list2):
+    """
+    Return a merge-sorted list from two input lists - 
+    generally fed from the merge_sort function.
+    """
     outlist = []
     left = deque(list1)
     right = deque(list2)
@@ -20,6 +24,9 @@ def merge(list1, list2):
 
 
 def merge_sort(list_):
+    """Sort an input list by separating the list in two, 
+    and then calling merge on the recursive 
+    output of the left and right lists."""
     if len(list_) > 1:
         pivot = len(list_) >> 1
         left, right = list_[:pivot], list_[pivot:]

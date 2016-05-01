@@ -11,6 +11,7 @@ def insert_sort(list_):
             pass
     return outlist
 
+
 def _swap(list_, index):
     """Swap item with item at previous index."""
     list_[index], list_[index - 1] = list_[index - 1], list_[index]
@@ -49,7 +50,3 @@ def _swap(list_, index):
 #             except IndexError:
 #                 pass
 #     return outlist
-
-
-
-

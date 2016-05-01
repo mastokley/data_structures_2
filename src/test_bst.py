@@ -8,6 +8,7 @@ DIVERSE_TREES = [
     [22, 2, 6, -7, 31, 5, 18, 14, 108, -54, 24.5, 29, -23, 16],
 ]
 
+
 @pytest.fixture
 def empty_tree():
     from .bst import BST
@@ -328,6 +329,3 @@ def test_rebalance_base_case(empty_tree):
     assert tree.head.r_child.val == 5
     print_out = [n for n in tree.traverse_breadth()]
     assert print_out == [4, 2, 5, 1, 3, 6]
-
-
-

@@ -1,5 +1,7 @@
-import pytest
 import itertools as it
+
+import pytest
+
 # from .test_insertion import Newple
 
 # npl_a = Newple([1,1])
@@ -52,4 +54,3 @@ def test_radix_sort_bluntly():
         expected = [x for x in range(5)]
         perms = [e for e in permutation]
         assert radix_sort(perms) == expected
-

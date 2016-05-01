@@ -1,5 +1,6 @@
-import numpy
 from random import randint
+
+import numpy
 
 
 def quicksort(iterable):
@@ -34,4 +35,3 @@ if __name__ == '__main__':
     input = [randint(0, 1000000) for i in range(50)]
     t = Timer(lambda: quicksort(input))
     print(t.timeit(number=500))
-    """print("this is where AJ's crummy solution starts")"""

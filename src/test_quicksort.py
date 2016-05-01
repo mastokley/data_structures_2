@@ -1,5 +1,5 @@
 import pytest
-import itertools as it
+
 from .test_insertion import Newple
 
 npl_a = Newple([1, 1])
@@ -18,7 +18,7 @@ PARAMS = [
     ([2, 3, 1], [1, 2, 3]),
     ([3, 2, 1], [1, 2, 3]),
     ([3, 1, 2], [1, 2, 3]),
-#     ([npl_a, npl_b, npl_c, ], [npl_a, npl_b, npl_c, ]),
+    #   ([npl_a, npl_b, npl_c, ], [npl_a, npl_b, npl_c, ]),
 ]
 
 
@@ -34,4 +34,3 @@ def test_sort(inlist, expected):
 #     for permutation in it.permutations(range(5)):
 #         expected = [x for x in range(5)]
 #         assert [x for x in quicksort([*permutation])] == expected
-
