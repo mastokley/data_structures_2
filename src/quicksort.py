@@ -24,6 +24,13 @@ def quicksort(iterable):
         for element in quicksort(right):
             yield element
 
+
+def unpacked_quicksort(iterable):
+    """
+    Returns a list rather than a generator object, for those who prefer it.
+    """
+    return [x for x in quicksort(iterable)]
+
 if __name__ == '__main__':
     from timeit import Timer
     input = [randint(0, 1000000) for i in range(500)]
