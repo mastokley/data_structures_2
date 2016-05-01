@@ -3,6 +3,7 @@ import itertools
 import math
 from random import randint
 
+
 def radix_sort(list_):
     if not list_:
         return list_
@@ -16,12 +17,12 @@ def radix_sort(list_):
         i_ += 1
     return list_
 
+
 def _power_sort(other_list, num):
     sorted_list = [[] for i in range(10)]
     for item in other_list:
         sorted_list[(item // 10**num) % 10].append(item)
     return _unbin(sorted_list)
-
 
 
 def _unbin(twodee_list):

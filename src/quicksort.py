@@ -1,5 +1,6 @@
-import numpy
 from random import randint
+
+import numpy
 
 
 def quicksort(iterable):
@@ -23,6 +24,13 @@ def quicksort(iterable):
         for element in quicksort(right):
             yield element
 
+
+def unpacked_quicksort(iterable):
+    """
+    Returns a list rather than a generator object, for those who prefer it.
+    """
+    return [x for x in quicksort(iterable)]
+
 if __name__ == '__main__':
     from timeit import Timer
     input = [randint(0, 1000000) for i in range(500)]
@@ -34,4 +42,3 @@ if __name__ == '__main__':
     input = [randint(0, 1000000) for i in range(50)]
     t = Timer(lambda: quicksort(input))
     print(t.timeit(number=500))
-    """print("this is where AJ's crummy solution starts")"""

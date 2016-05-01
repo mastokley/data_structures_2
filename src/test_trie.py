@@ -74,7 +74,7 @@ def test_trie_traversal_edge_zero():
     expected = []
     assert sorted(expected) == sorted(output)
 
-    
+
 def test_trie_traversal_subset():
     from .trie import Trie
     trie = Trie()
@@ -100,7 +100,7 @@ def test_autocomplete_mulitlist():
     assert out == expected
 
 
-def test_autocomplete_mulitlist():
+def test_autocomplete_mulitlist_2():
     from .trie import Trie
     trie = Trie()
     trie._container = TEST_TRIE

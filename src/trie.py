@@ -53,7 +53,10 @@ class Trie(object):
         return [''.join([token, w]) for w in self.traversal(node)]
 
     def autocomplete_multilist(self, token=''):
-        """Return dictionary for possible results for each keystroke in token."""
+        """
+        Return dictionary for possible results
+        for each keystroke in token.
+        """
         token_list = []
         for i in range(1, len(token) + 1):
             token_list.append(token[:i])
@@ -61,4 +64,3 @@ class Trie(object):
         for token in token_list:
             out[token] = sorted([w for w in self.autocomplete(token)][:4])
         return out
-
