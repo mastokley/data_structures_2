@@ -50,3 +50,15 @@ def _swap(list_, index):
 #             except IndexError:
 #                 pass
 #     return outlist
+
+if __name__ == '__main__':
+    from timeit import Timer
+    input = [randint(0, 1000000) for i in range(500)]
+    t = Timer(lambda: insert_sort(input))
+    print("This insertion sort has time complexity of O(n^2)")
+    print("running a 500 item list 500 times")
+    print(t.timeit(number=500))
+    print("running a 50 item list 500 times")
+    input = [randint(0, 1000000) for i in range(50)]
+    t = Timer(lambda: insert_sort(input))
+    print(t.timeit(number=500))
