@@ -1,4 +1,4 @@
-<img src=https://travis-ci.org/mastokley/data_structures_2.svg?branch=master/>
+[![Build Status](https://travis-ci.org/mastokley/data_structures_2.svg?branch=master)](https://travis-ci.org/mastokley/data_structures_2)
 
 # data_structures_2
 
